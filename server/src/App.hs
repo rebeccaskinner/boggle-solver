@@ -9,12 +9,17 @@ import qualified Data.Trie as T
 import qualified Data.ByteString.Lazy.Char8 as BC
 import qualified Data.ByteString.Char8 as BS
 
+-- | The AppT monad represents the application state
 newtype AppT m a = AppT
   { runAppT :: ExceptT AppException (ReaderT Cfg m) a
   } deriving (Functor,Applicative,Monad,MonadIO,MonadReader Cfg, MonadError AppException)
 
+-- | For expediency given the time limits, we only define a single
+-- | purpose exception type.  In general this would contain all of the
+-- | different known failure cases of our application.
 data AppException = GeneralException String deriving (Eq, Show)
 
+-- | Cfg contains the configured state of the application
 data Cfg = Cfg
   { _cfgWordTrie  :: T.Trie ()
   , _configUIData :: BC.ByteString

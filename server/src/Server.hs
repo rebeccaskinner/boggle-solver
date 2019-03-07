@@ -8,45 +8,46 @@ module Server
     ) where
 
 import App
-
 import Data.Aeson
-import Data.Aeson.TH
 import System.Environment (getArgs)
 import Network.Wai
 import Network.Wai.Handler.Warp
 import Network.HTTP.Media.MediaType
 import Servant
 import Boggle
-import Control.Monad.Except
 import Control.Monad.Reader
-import Control.Monad.Fail
-import Data.Maybe
 import GHC.Generics
-import Text.Printf
-import Data.ByteString (ByteString)
 import qualified Data.ByteString.Lazy.Char8 as BC
-import qualified Data.Map.Strict as Map
 
+-- | API defines our boggle API.  It exposes two endpoints, `/boggle`
+-- and `/`.
 type API = "boggle" :> ReqBody '[JSON] BoggleRequest :> Get '[JSON] [String]
            :<|> Get '[HTML] String
 
+-- | AppServer a is a basic wrapper around a ServerT to improve
+-- readability when we hoist AppT into the ServerT monad.
 type AppServer a = ServerT a (AppT IO)
 
+-- | BoggleRequest represents the body of a boggle endpoint request.
 data BoggleRequest = BoggleRequest
   { reqSize :: Int
   , reqData :: String
   } deriving (Eq, Show, Generic)
 
+-- Create instances for ToJSON and FromJSON automatically
 instance ToJSON BoggleRequest
 instance FromJSON BoggleRequest
 
-data HTML = HTML
+-- | HTML is a stub type to allow us to pass raw data with an HTML
+-- | content type.
+data HTML
 instance Accept HTML where
   contentType _ = "text" // "html"
 
 instance MimeRender HTML String where
   mimeRender _ a = BC.pack a
 
+-- | appToHandler lets us hoist our application monad into a handler.
 appToHandler :: Cfg -> AppT IO a -> Handler a
 appToHandler c app = liftIO $ runApp c app
 

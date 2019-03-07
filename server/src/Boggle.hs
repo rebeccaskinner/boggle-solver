@@ -77,6 +77,9 @@ dictMatches dict t =
           NotFoundCont -> m
           NotFoundTerminal -> []
 
+-- | lookupDict will look up a specific word fragment in the trie and
+-- | return a state that helps the traversal algorithm determine whether
+-- | or not it should early-abort.
 lookupDict :: T.Trie () -> String -> LookupState
 lookupDict dict s =
   let
@@ -94,6 +97,8 @@ lookupDict dict s =
           else FoundCont s
 
 
+-- | neighbors' calculates a list of all of the neighboring points in
+-- | an nxn gride given n and an (x,y) coordinate in the grid.
 neighbors' :: (Ord a, Num a) => a -> (a, a) -> [(a,a)]
 neighbors' bounds (x,y) =
   let xs = [x - 1, x, x + 1]
@@ -106,23 +111,32 @@ neighbors' bounds (x,y) =
                , y' >= 0
                , y' < bounds ]
 
+-- | To index takes a 2D point on an nxn grid and turns it into a
+-- | linear index in an n-stride list.
 toIndex :: Int -> (Int, Int) -> Int
 toIndex stride (x,y) =
   x + (y * stride)
 
+-- | fromIndex is the inverse of toIndex, taking a linear point and a
+-- | stride and returning a point in 2D space.
 fromIndex :: Int -> Int -> (Int, Int)
 fromIndex stride idx =
   (idx `rem` stride, idx `div` stride)
 
+-- | neighbors finds the neighbors of an element in 2D spaces and maps
+-- | them back into 1D space.
 neighbors :: Int -> Int -> [Int]
 neighbors dimension idx =
   let idx' = fromIndex dimension idx
       neighborsInRange = neighbors' dimension idx'
   in map (toIndex dimension) neighborsInRange
 
+-- | mkNodes takes a string and generates a set of graph nodes labled
+-- | with the characters in the string.
 mkNodes :: String -> [G.LNode Char]
 mkNodes s = zip [0..] s
 
+-- | mkEdges generates the edges for a graph based on an NxN grid.
 mkEdges :: Int -> [G.LEdge ()]
 mkEdges n =
   nub $ concatMap idxEdges [0.. (n ^ 2) - 1]
@@ -131,11 +145,16 @@ mkEdges n =
     idxEdges idx =
       map (\a -> (idx, a, ())) $ neighbors n idx
 
+-- | boardGraph takes a dimension and a string and generates a graph
+-- | that represents the connections in the boggle board.
 boardGraph :: Int -> String -> Maybe (PT.Gr Char ())
 boardGraph n s
   | (length s) == n ^ 2 = Just $ G.mkGraph (mkNodes s) (mkEdges n)
   | otherwise = Nothing
 
+-- | tour walks the graph from a specific starting index and generates
+-- | a prefix tree for all of the different paths that could have been
+-- | taken.
 tour :: G.Graph gr => gr Char b -> Int -> TourTrie
 tour g idx =
   let g' = G.delNode idx g
@@ -150,6 +169,8 @@ tour g idx =
     else
       TourTrie l (map (tour g') n)
 
+-- | getCh is a utility function to access the character for a given
+-- | TourTrie node.
 getCh :: TourTrie -> Char
 getCh = \case
   (End c) -> c
