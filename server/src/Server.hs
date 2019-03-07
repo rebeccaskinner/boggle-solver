@@ -21,7 +21,7 @@ import qualified Data.ByteString.Lazy.Char8 as BC
 
 -- | API defines our boggle API.  It exposes two endpoints, `/boggle`
 -- and `/`.
-type API = "boggle" :> ReqBody '[JSON] BoggleRequest :> Get '[JSON] [String]
+type API = "boggle" :> ReqBody '[JSON] BoggleRequest :> Post '[JSON] [String]
            :<|> Get '[HTML] String
 
 -- | AppServer a is a basic wrapper around a ServerT to improve
