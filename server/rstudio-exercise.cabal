@@ -1,0 +1,73 @@
+name:                rstudio-exercise
+version:             0.1.0.0
+-- synopsis:
+-- description:
+homepage:            https://github.com/rebeccaskinner/rstudio-exercise#readme
+license:             BSD3
+license-file:        LICENSE
+author:              Rebecca Skinner
+maintainer:          rebecca@rebeccaskinner.net
+copyright:           Copyright (c) 2017 Rebecca Skinner; All Rights Reserved
+category:            Web
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+library
+  hs-source-dirs:      src
+  exposed-modules:     Server
+                     , App
+                     , Boggle
+  build-depends:       base >= 4.7 && < 5
+                     , aeson
+                     , servant-server
+                     , wai
+                     , warp
+                     , mtl
+                     , containers
+                     , bytestring
+                     , http-media
+                     , fgl
+                     , bytestring-trie >= 0.2.5.0
+  default-language:    Haskell2010
+  default-extensions: GADTs
+                    , OverloadedStrings
+                    , LambdaCase
+                    , RankNTypes
+                    , FlexibleContexts
+                    , FlexibleInstances
+                    , ScopedTypeVariables
+                    , TypeApplications
+                    , TypeFamilies
+                    , BangPatterns
+                    , ExistentialQuantification
+                    , FunctionalDependencies
+                    , MultiParamTypeClasses
+                    , DeriveFunctor
+                    , GeneralizedNewtypeDeriving
+                    , DeriveGeneric
+
+executable rstudio-exercise
+  hs-source-dirs:      app
+  main-is:             Main.hs
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base
+                     , rstudio-exercise
+  default-language:    Haskell2010
+
+test-suite rstudio-exercise-test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             Spec.hs
+  build-depends:       base
+                     , rstudio-exercise
+                     , hspec
+                     , hspec-wai
+                     , hspec-wai-json
+                     , aeson
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  default-language:    Haskell2010
+
+source-repository head
+  type:     git
+  location: https://github.com/rebeccaskinner/rstudio-exercise

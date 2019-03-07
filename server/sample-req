@@ -1,0 +1,4 @@
+GET http://localhost:8080/boggle
+Content-Type: application/json
+
+{"reqSize": 4, "reqData": "ellohugeqxumrytp"}
