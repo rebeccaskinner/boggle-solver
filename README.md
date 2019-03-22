@@ -9,7 +9,7 @@ information about building the server.
 From the `server` directory run the application with:
 
 ```
-stack exec rstudio-exercise -- /usr/share/dict/words ../frontend/index.html
+stack exec boggle-solver -- /usr/share/dict/words ../frontend/index.html
 ```
 
 then go to `http://localhost:8080` in your browser.

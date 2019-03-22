@@ -32,7 +32,6 @@ type Msg
     | SolveRequest
     | SolveResponse (Result Http.Error (List String))
 
-
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -44,7 +43,6 @@ update msg model =
             in ({model | errMsg = Just msgStr}, Cmd.none)
         SolveResponse (Ok results) ->
             ({model | resultString = results, errMsg = Nothing}, Cmd.none)
-
 
 stringifyErr : Http.Error -> String
 stringifyErr e =
