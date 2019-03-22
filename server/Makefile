@@ -1,7 +1,7 @@
 .PHONY: all
-all: rstudio-exercise
+all: boggle-solver
 
-rstudio-exercise:
+boggle-solver:
 	stack build
 
 .PHONY: clean

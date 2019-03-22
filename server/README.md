@@ -1,4 +1,4 @@
-# rstudio-exercise
+# Boggle Solver
 
 This application provides a basic backend server to run a boggle game.  It's
 written in haskell and uses stack for the build system.  You can install stack
@@ -18,7 +18,7 @@ To build the application, use: `stack build`
 To run the application with stack, use:
 
 ```
-stack exec rstudio-exercise -- dictionary_path ui_path
+stack exec boggle-solver -- dictionary_path ui_path
 ```
 
 For the dictionary, you can provide any file containing newline-separated utf8
